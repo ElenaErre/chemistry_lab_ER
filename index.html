@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedoxMaster Lab - Risolutore & Guida Didattica Equazioni Redox</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header & Navigazione Principale -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-container" id="brandBtn">
+        <div class="brand-icon">⚛</div>
+        <div>
+          <div class="brand-title">RedoxMaster Lab</div>
+          <div class="brand-subtitle">Metodo Semireazioni &amp; Numero di Ossidazione</div>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab-btn active" data-tab="tab-solver">
+          <span>⚡</span> Risolutore
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-tutorial">
+          <span>📖</span> Teoria &amp; Guida
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-cases">
+          <span>🔬</span> Casi Studio Risolti
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-oxcalc">
+          <span>🧮</span> Calcolatore N.O.
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-quiz">
+          <span>🎯</span> Quiz &amp; Esercizi
+        </button>
+      </nav>
+
+      <div class="header-controls">
+        <button class="btn-icon" id="themeToggleBtn" title="Cambia tema chiaro/scuro">🌓</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenitore Principale dell'Applicazione -->
+  <main class="app-container">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: RISOLUTORE INTERATTIVO REDOX -->
+    <!-- ========================================== -->
+    <section id="tab-solver" class="tab-content active">
+      <div class="solver-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <span class="card-title-icon">🧪</span> Risolutore Interattivo Passo-Passo
+            </h2>
+            <div class="preset-bar">
+              <span class="preset-label">Esempi Pronti:</span>
+              <select id="presetSelect" class="preset-select">
+                <option value="">-- Seleziona una reazione classica --</option>
+                <option value="MnO4^- + Fe^2+ -> Mn^2+ + Fe^3+|acid">Permanganato + Ferro(II) [Ambiente Acido]</option>
+                <option value="Cr2O7^2- + I^- -> Cr^3+ + I2|acid">Dicromato + Ioduro [Ambiente Acido]</option>
+                <option value="MnO4^- + SO3^2- -> MnO2 + SO4^2-|base">Permanganato + Solfito [Ambiente Basico]</option>
+                <option value="Cl2 -> Cl^- + ClO3^-|base">Dismutazione Cloro [Ambiente Basico]</option>
+                <option value="Cu + HNO3 -> Cu(NO3)2 + NO2 + H2O|acid">Rame + Acido Nitrico concentrato [Molecolare]</option>
+                <option value="Cu + HNO3 -> Cu(NO3)2 + NO + H2O|acid">Rame + Acido Nitrico diluito [Molecolare]</option>
+                <option value="H2O2 + MnO4^- -> O2 + Mn^2+|acid">Acqua Ossigenata + Permanganato [Acido]</option>
+                <option value="Al + NO3^- -> [Al(OH)4]^- + NH3|base">Alluminio + Nitrato [Ambiente Basico]</option>
+                <option value="S2O3^2- + I2 -> S4O6^2- + I^-|neutral">Tiosolfato + Iodio [Neutro/Analitico]</option>
+                <option value="IO3^- + I^- -> I2|acid">Sinproporzione Iodato + Ioduro [Acido]</option>
+                <option value="Zn + NO3^- -> Zn^2+ + NH4^+|acid">Zinco + Nitrato [Ambiente Acido]</option>
+                <option value="BiO3^- + Mn^2+ -> Bi^3+ + MnO4^-|acid">Bismutato + Manganese [Ambiente Acido]</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Input Equazione -->
+          <div class="equation-input-wrap">
+            <input type="text" id="equationInput" class="equation-input" 
+                   placeholder="Es. MnO4^- + Fe^2+ -> Mn^2+ + Fe^3+" 
+                   value="MnO4^- + Fe^2+ -> Mn^2+ + Fe^3+" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
+          </div>
+          <label class="autofmt-toggle" title="Mentre scrivi, i numeri diventano pedici (H2O → H₂O) e le cariche apici (Fe2+ → Fe²⁺)">
+            <input type="checkbox" id="autoFormatToggle" checked>
+            <span class="autofmt-switch" aria-hidden="true"></span>
+            Formattazione automatica mentre scrivi
+          </label>
+
+          <!-- Anteprima Live Formattata -->
+          <div class="live-preview">
+            <span class="live-preview-label">Formula Formattata:</span>
+            <div id="livePreviewContent" class="live-preview-content">MnO<sub>4</sub><sup>−</sup> + Fe<sup>2+</sup> &rarr; Mn<sup>2+</sup> + Fe<sup>3+</sup></div>
+          </div>
+          <div id="inputFeedback" class="input-feedback" aria-live="polite"></div>
+
+          <details class="syntax-help">
+            <summary>✍️ Come scrivere le formule</summary>
+            <div class="syntax-grid">
+              <div><b>Scrivi così…</b><span>H2O · Fe2+ · MnO4- · SO42-</span></div>
+              <div><b>…e diventa</b><span>H₂O · Fe²⁺ · MnO₄⁻ · SO₄²⁻</span></div>
+              <div><b>Pedici</b><span>H2O, Fe2(SO4)3, [Al(OH)4]^-</span></div>
+              <div><b>Cariche (consigliato)</b><span>Fe^2+, MnO4^-, SO4^2-, NH4^+</span></div>
+              <div><b>Cariche (veloce)</b><span>Fe2+, Cu++, MnO4-, SO42-, Cr2O72-</span></div>
+              <div><b>Copia/incolla</b><span>H₂O, Fe²⁺, MnO₄⁻ sono accettati</span></div>
+              <div><b>Frecce</b><span>-&gt;  =  →  ⇌</span></div>
+              <div><b>Idrati</b><span>CuSO4·5H2O oppure CuSO4*5H2O</span></div>
+            </div>
+            <p class="syntax-note">Con la formattazione automatica attiva, i numeri subito dopo un elemento diventano pedici e il segno + o − scritto attaccato alla formula diventa la carica. Per una carica a scelta tua digita <code>^</code>: tutto quello che scrivi dopo va in apice (es. <code>Hg2^2+</code> → Hg₂²⁺). Il coefficiente si scrive davanti, separato o no (<code>2H2O</code> → 2 H₂O).</p>
+            <p class="syntax-note">Separa le specie con « + » (spazi consigliati). I simboli iniziano sempre con la maiuscola: <code>Co</code> è il cobalto, <code>CO</code> il monossido di carbonio. Non serve aggiungere H⁺, OH⁻, H₂O o elettroni: li inserisce il risolutore in base all'ambiente.</p>
+          </details>
+
+          <!-- Tastierino Chimico Rapido -->
+          <div class="chem-keypad">
+            <span class="keypad-title">Tasti Rapidi:</span>
+            <button class="chem-btn op" data-insert=" -> ">&rarr;</button>
+            <button class="chem-btn op" data-insert=" + ">+</button>
+            <button class="chem-btn" data-insert="^+">⁺</button>
+            <button class="chem-btn" data-insert="^-">⁻</button>
+            <button class="chem-btn" data-insert="^2+">²⁺</button>
+            <button class="chem-btn" data-insert="^2-">²⁻</button>
+            <button class="chem-btn" data-insert="^3+">³⁺</button>
+            <button class="chem-btn species" data-insert="H^+">H⁺</button>
+            <button class="chem-btn species" data-insert="OH^-">OH⁻</button>
+            <button class="chem-btn species" data-insert="H2O">H₂O</button>
+            <button class="chem-btn species" data-insert="MnO4^-">MnO₄⁻</button>
+            <button class="chem-btn species" data-insert="Cr2O7^2-">Cr₂O₇²⁻</button>
+            <button class="chem-btn species" data-insert="Fe^2+">Fe²⁺</button>
+            <button class="chem-btn species" data-insert="SO4^2-">SO₄²⁻</button>
+            <button class="chem-btn" data-insert="()" data-cursor="-1">( )</button>
+            <button class="chem-btn" data-insert="[]" data-cursor="-1">[ ]</button>
+            <button class="chem-btn" data-insert="·">·</button>
+            <button class="chem-btn" id="normalizeInputBtn" title="Riscrive l'equazione nella notazione standard (es. Fe2+ → Fe^2+)">✨ Normalizza</button>
+            <button class="chem-btn" id="clearInputBtn">Cancella</button>
+          </div>
+
+          <!-- Ambiente di reazione e pulsante azione -->
+          <div class="solver-options">
+            <div class="env-selector">
+              <span class="env-label">Ambiente di Reazione:</span>
+              <div class="radio-group" id="mediumRadioGroup">
+                <span class="radio-btn active" data-medium="acid">Acido (H⁺)</span>
+                <span class="radio-btn" data-medium="base">Basico (OH⁻)</span>
+                <span class="radio-btn" data-medium="neutral">Neutro</span>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="solveBtn">
+              <span>🚀</span> Bilancia &amp; Mostra Passaggi
+            </button>
+          </div>
+        </div>
+
+        <!-- Risultato del Bilanciamento -->
+        <div id="solutionContainer">
+          <!-- Banner Equazione Bilanciata -->
+          <div class="result-banner">
+            <div class="result-banner-header">
+              <div class="result-banner-title">
+                <span>✅</span> Equazione Completamente Bilanciata
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="chem-btn" id="copyResultBtn" title="Copia equazione">📋 Copia</button>
+                <button class="chem-btn" id="printBtn" title="Stampa o salva in PDF">🖨️ Stampa</button>
+              </div>
+            </div>
+            <div id="balancedEquationOutput" class="result-equation">
+              <!-- Riempito dinamicamente -->
+            </div>
+            <div class="result-meta-bar" id="resultMetaBar">
+              <!-- Riempito dinamicamente -->
+            </div>
+          </div>
+
+          <!-- Navigatore Metodi Risolutivi -->
+          <div class="method-switch-nav">
+            <button class="method-switch-btn active" data-method="half-reaction">
+              Metodo Semireazioni (Ionico-Elettronico)
+            </button>
+            <button class="method-switch-btn" data-method="oxidation-number">
+              Metodo Numero di Ossidazione
+            </button>
+            <button class="method-switch-btn" data-method="comparison">
+              Confronto Diretto dei Metodi
+            </button>
+          </div>
+
+          <!-- Contenitore Passaggi Dinamici -->
+          <div id="stepsDisplay" class="steps-container">
+            <!-- I passaggi dettagliati verranno iniettati via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: GUIDA & TUTORIAL TEORICO -->
+    <!-- ========================================== -->
+    <section id="tab-tutorial" class="tab-content">
+      <div class="tutorial-hero">
+        <h1>Guida Completa al Bilanciamento delle Reazioni Redox</h1>
+        <p>
+          Impara a padroneggiare sia il <b>Metodo delle Semireazioni (Ionico-Elettronico)</b> sia il <b>Metodo del Numero di Ossidazione</b>, comprendendo a fondo i meccanismi di trasferimento elettronico, ambiente acido/basico e conservazione della massa e della carica.
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <h2 class="theory-section-title"><span>📌</span> 1. I Concetti Fondamentali</h2>
+        <div class="theory-grid">
+          <div class="rule-card">
+            <div class="rule-number">Concetto 1</div>
+            <div class="rule-title">Ossidazione</div>
+            <div class="rule-text">
+              È il processo in cui una specie chimica <b>perde elettroni (e⁻)</b>. Come conseguenza diretta, il suo <b>numero di ossidazione (n.o.) aumenta</b>. La specie che si ossida agisce da <i>riducente</i> nei confronti delle altre specie.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Concetto 2</div>
+            <div class="rule-title">Riduzione</div>
+            <div class="rule-text">
+              È il processo in cui una specie chimica <b>acquista elettroni (e⁻)</b>. Di conseguenza, il suo <b>numero di ossidazione (n.o.) diminuisce</b>. La specie che si riduce agisce da <i>ossidante</i>.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Concetto 3</div>
+            <div class="rule-title">Conservazione Elettronica</div>
+            <div class="rule-text">
+              In qualsiasi trasformazione chimica, gli elettroni non si creano né si distruggono: <b>il numero totale di elettroni ceduti dal riducente deve uguagliare rigorosamente il numero di elettroni acquistati dall'ossidante</b>.
+            </div>
+          </div>
+        </div>
+
+        <h2 class="theory-section-title"><span>📏</span> 2. Regole IUPAC per l'Assegnazione del Numero di Ossidazione (n.o.)</h2>
+        <div class="theory-grid">
+          <div class="rule-card">
+            <div class="rule-number">Regola I</div>
+            <div class="rule-title">Sostanze Elementari</div>
+            <div class="rule-text">
+              Il n.o. di un elemento allo stato elementare (es. O₂, Cl₂, N₂, Fe, Cu, S₈, P₄) è sempre <b>pari a 0</b>.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Regola II</div>
+            <div class="rule-title">Ioni Monoatomici</div>
+            <div class="rule-text">
+              Il n.o. coincide esattamente con la carica dello ione (es. Fe²⁺ ha +2, Fe³⁺ ha +3, Cl⁻ ha -1, S²⁻ ha -2, Na⁺ ha +1).
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Regola III</div>
+            <div class="rule-title">Fluoro e Metalli Fissi</div>
+            <div class="rule-text">
+              Il Fluoro (F) è l'elemento più elettronegativo ed ha sempre <b>-1</b>.<br>
+              I metalli alcalini (Gruppo 1: Li, Na, K) hanno sempre <b>+1</b>.<br>
+              I metalli alcalino-terrosi (Gruppo 2: Mg, Ca, Ba) hanno sempre <b>+2</b>.<br>
+              L'Alluminio (Al) ha sempre <b>+3</b>, lo Zinco (Zn) <b>+2</b>, l'Argento (Ag) <b>+1</b>.
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Regola IV</div>
+            <div class="rule-title">Idrogeno (H)</div>
+            <div class="rule-text">
+              Ha <b>n.o. = +1</b> nella quasi totalità dei composti (legato a non metalli: H₂O, HCl, NH₃).<br>
+              Assume <b>n.o. = -1</b> negli <i>idruri metallici</i> dove è legato a metalli più elettropositivi (es. NaH, CaH₂).
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Regola V</div>
+            <div class="rule-title">Ossigeno (O)</div>
+            <div class="rule-text">
+              Ha <b>n.o. = -2</b> nella maggior parte dei composti (H₂O, CO₂, KMnO₄).<br>
+              Ha <b>n.o. = -1</b> nei <i>perossidi</i> (legame O−O come H₂O₂, Na₂O₂).<br>
+              Ha <b>n.o. = +2</b> solo nel fluoruro di ossigeno (OF₂).
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-number">Regola VI</div>
+            <div class="rule-title">Somma Algebrica dei n.o.</div>
+            <div class="rule-text">
+              In una molecola neutra, la somma algebrica dei n.o. moltiplicati per il rispettivo numero di atomi è uguale a <b>0</b>.<br>
+              In uno ione poliatomico, la somma è uguale alla <b>carica dello ione</b>.
+            </div>
+          </div>
+        </div>
+
+        <h2 class="theory-section-title"><span>⚙️</span> 3. Algoritmo del Metodo delle Semireazioni (Ionico-Elettronico)</h2>
+        <div style="color: var(--text-muted); font-size: 15px; margin-bottom: 20px;">
+          Questo metodo è ideale per reazioni in soluzione acquosa fornite in forma ionica. Si articola in 6 tappe rigorose:
+        </div>
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">1</div>
+              <div class="step-title">Scrittura delle Semireazioni Scheletro</div>
+            </div>
+            <div class="step-description">
+              Si separano la specie che si ossida (riducente &rarr; forma ossidata) e la specie che si riduce (ossidante &rarr; forma ridotta).
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">2</div>
+              <div class="step-title">Bilanciamento degli Atomi Diversi da O e H</div>
+            </div>
+            <div class="step-description">
+              Si bilanciano gli atomi dell'elemento che cambia stato di ossidazione introducendo opportuni coefficienti stechiometrici (es. Cr₂O₇²⁻ produce 2 Cr³⁺; 2 I⁻ producono I₂).
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">3</div>
+              <div class="step-title">Bilanciamento dell'Ossigeno con molecole di H₂O</div>
+            </div>
+            <div class="step-description">
+              Per ogni atomo di ossigeno mancante da un lato della semireazione, si aggiunge una molecola di <b>H₂O</b> sul lato opposto.
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">4</div>
+              <div class="step-title">Bilanciamento dell'Idrogeno (Ambiente Acido vs Basico)</div>
+            </div>
+            <div class="step-description">
+              • <b>In ambiente acido:</b> per ogni H mancante si aggiunge uno ione <b>H⁺</b>.<br>
+              • <b>In ambiente basico:</b> si aggiungono H⁺ come in ambiente acido, poi si neutralizzano sommando a entrambi i membri tanti ioni <b>OH⁻</b> quanti sono gli H⁺ (ricordando che H⁺ + OH⁻ &rarr; H₂O), semplificando poi le molecole di H₂O eccedenti.
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">5</div>
+              <div class="step-title">Bilanciamento delle Cariche con Elettroni (e⁻)</div>
+            </div>
+            <div class="step-description">
+              Si calcola la carica totale a sinistra e a destra di ciascuna semireazione. Si aggiungono elettroni (<b>e⁻</b>) sul lato con carica maggiore, in modo che la carica elettrica totale risulti identica sui due lati.
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">6</div>
+              <div class="step-title">Minimo Comune Multiplo, Somma e Semplificazione</div>
+            </div>
+            <div class="step-description">
+              Si calcola il m.c.m. tra gli elettroni delle due semireazioni. Si moltiplicano le semireazioni per i rispettivi fattori, si sommano membro a membro eliminando gli elettroni e semplificando le specie comuni (H₂O, H⁺, OH⁻).
+            </div>
+          </div>
+        </div>
+
+        <h2 class="theory-section-title"><span>⚖️</span> 4. Algoritmo del Metodo del Numero di Ossidazione</h2>
+        <div style="color: var(--text-muted); font-size: 15px; margin-bottom: 20px;">
+          Particolarmente efficace per reazioni fornite in forma molecolare o con numerosi spettatori:
+        </div>
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">1</div>
+              <div class="step-title">Calcolo dei Numeri di Ossidazione di tutti gli elementi</div>
+            </div>
+            <div class="step-description">
+              Si scrivono sopra ciascun elemento i rispettivi n.o. sia nei reagenti sia nei prodotti.
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">2</div>
+              <div class="step-title">Calcolo delle variazioni (Δ n.o.)</div>
+            </div>
+            <div class="step-description">
+              Si calcola il &Delta; n.o. per ciascun elemento, moltiplicando per il pedice presente nella formula (es. in Cr₂O₇²⁻ la variazione per unità di formula è 2 &times; 3 = 6 e⁻).
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">3</div>
+              <div class="step-title">Pareggio dello scambio elettronico</div>
+            </div>
+            <div class="step-description">
+              Si calcola il m.c.m. tra gli elettroni ceduti e acquistati e si posizionano i primi coefficienti stechiometrici davanti alle specie redox.
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">4</div>
+              <div class="step-title">Bilanciamento delle Cariche e degli Atomi Spettatori</div>
+            </div>
+            <div class="step-description">
+              Si bilanciano gli ioni spettatori e le cariche nette (con H⁺ in ambiente acido o OH⁻ in ambiente basico).
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-badge">5</div>
+              <div class="step-title">Bilanciamento di H e O con H₂O e Verifica</div>
+            </div>
+            <div class="step-description">
+              Si pareggia l'idrogeno aggiungendo H₂O. Il conteggio finale degli atomi di ossigeno funge da test di correttezza infallibile.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: CASI STUDIO RISOLTI (GALLERIA) -->
+    <!-- ========================================== -->
+    <section id="tab-cases" class="tab-content">
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title"><span>📚</span> Galleria di Equazioni Redox Risolte</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">
+              Esplora casi studio accuratamente selezionati con tutti i passaggi, suggerimenti e trappole comuni. Clicca su una scheda per aprire la soluzione dettagliata.
+            </p>
+          </div>
+        </div>
+
+        <!-- Filtri per Categoria -->
+        <div class="case-filter-bar" id="caseFilterBar">
+          <button class="filter-btn active" data-filter="all">Tutte le Equazioni</button>
+          <button class="filter-btn" data-filter="Ambiente Acido">Ambiente Acido</button>
+          <button class="filter-btn" data-filter="Ambiente Basico">Ambiente Basico</button>
+          <button class="filter-btn" data-filter="Molecolare">Molecolari</button>
+          <button class="filter-btn" data-filter="Dismutazione">Dismutazioni</button>
+        </div>
+
+        <!-- Griglia delle Equazioni Risolte -->
+        <div class="cases-grid" id="casesGrid">
+          <!-- Iniettato via JS da TUTORIAL_EQUATIONS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: CALCOLATORE NUMERO DI OSSIDAZIONE -->
+    <!-- ========================================== -->
+    <section id="tab-oxcalc" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><span>🧮</span> Calcolatore Istantaneo del Numero di Ossidazione</h2>
+        </div>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Inserisci una qualsiasi formula chimica o ione (es. <code>K2Cr2O7</code>, <code>H2SO4</code>, <code>MnO4^-</code>, <code>NH4^+</code>, <code>Fe2O3</code>, <code>H2O2</code>, <code>[Al(OH)4]^-</code>) per calcolare istantaneamente lo stato di ossidazione di ciascun elemento con l'equazione algebrica di risoluzione.
+        </p>
+
+        <div class="equation-input-wrap">
+          <input type="text" id="oxCalcInput" class="equation-input" placeholder="Es. K2Cr2O7 oppure MnO4^-" value="K2Cr2O7" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="live-preview">
+          <span class="live-preview-label">Anteprima:</span>
+          <div id="oxCalcPreview" class="live-preview-content"></div>
+        </div>
+        <div id="oxCalcFeedback" class="input-feedback" aria-live="polite"></div>
+
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+          <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); align-self: center;">Prova Rapida:</span>
+          <button class="chem-btn ox-example-btn" data-val="K2Cr2O7">K₂Cr₂O₇</button>
+          <button class="chem-btn ox-example-btn" data-val="MnO4^-">MnO₄⁻</button>
+          <button class="chem-btn ox-example-btn" data-val="H2SO4">H₂SO₄</button>
+          <button class="chem-btn ox-example-btn" data-val="H2O2">H₂O₂</button>
+          <button class="chem-btn ox-example-btn" data-val="Na2S2O3">Na₂S₂O₃</button>
+          <button class="chem-btn ox-example-btn" data-val="HClO4">HClO₄</button>
+          <button class="chem-btn ox-example-btn" data-val="NH4^+">NH₄⁺</button>
+          <button class="chem-btn ox-example-btn" data-val="Fe3O4">Fe₃O₄</button>
+        </div>
+
+        <button class="btn-primary" id="oxCalcBtn">
+          <span>🔍</span> Calcola Numeri di Ossidazione
+        </button>
+
+        <div id="oxCalcResult" style="margin-top: 24px; display: none;">
+          <!-- Riempito dinamicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: QUIZ & ESERCITAZIONI INTERATTIVE -->
+    <!-- ========================================== -->
+    <section id="tab-quiz" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title"><span>🎯</span> Mettiti alla Prova - Quiz &amp; Autovalutazione</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">
+              Verifica la tua comprensione dei concetti di ossidoriduzione rispondendo alle domande interattive.
+            </p>
+          </div>
+          <div id="quizScoreBadge" class="meta-chip electrons" style="font-weight: 700;">
+            Punteggio: 0 / 0
+          </div>
+        </div>
+
+        <div id="quizContainer">
+          <!-- Le domande del quiz verranno iniettate qui -->
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn-primary" id="restartQuizBtn">
+            <span>🔄</span> Riavvia il Quiz
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modale per Dettagli Caso Studio Risolto -->
+  <div class="modal-overlay" id="caseModalOverlay">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+      <div id="modalContent">
+        <!-- Contenuto dettagliato iniettato dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div><b>RedoxMaster Lab</b> &bull; Strumento didattico avanzato per studenti e docenti di Chimica</div>
+    <div style="margin-top: 4px; font-size: 12px; color: var(--text-dim);">
+      Supporta il Metodo delle Semireazioni (ionico-elettronico) in ambiente acido, basico e neutro e il Metodo del Numero di Ossidazione.
+    </div>
+  </footer>
+
+  <!-- Script Applicativi -->
+  <script src="js/chem-parser.js"></script>
+  <script src="js/redox-solver.js"></script>
+  <script src="js/data-equations.js"></script>
+  <script src="js/quiz-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
